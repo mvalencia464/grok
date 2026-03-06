@@ -1,7 +1,6 @@
 ---
 /**
- * Quote form island — use client:idle where imported for minimal JS impact.
- * GHL integration + server action will be added in phase 2 once API keys are available.
+ * Quote form — submits to Cloudflare Pages Function /api/submit-quote, which creates a GHL contact.
  */
 import siteData from '../data/site.json';
 
@@ -95,7 +94,8 @@ const neighborhoods = siteData.neighborhoods as string[];
 
   <button
     type="submit"
-    class="w-full rounded-lg bg-accent px-4 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-accent-dark focus-ring"
+    id="quote-submit-btn"
+    class="w-full rounded-lg bg-accent px-4 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-accent-dark focus-ring disabled:opacity-70 disabled:cursor-not-allowed"
   >
     Submit request
   </button>
@@ -103,18 +103,52 @@ const neighborhoods = siteData.neighborhoods as string[];
   <p class="text-xs text-neutral-500">
     By submitting you agree to be contacted about your project. We do not share your information.
   </p>
-  <p id="form-stub-message" class="hidden text-sm text-accent-dark mt-2" role="status"></p>
+  <p id="form-message" class="hidden text-sm mt-2" role="status" aria-live="polite"></p>
 </form>
 
 <script>
-  // Stub: GHL integration + server action will be added in phase 2 once API keys are available.
   const form = document.getElementById('quote-form');
-  const messageEl = document.getElementById('form-stub-message');
-  if (form && messageEl) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      messageEl.classList.remove('hidden');
-      messageEl.textContent = 'Form submission will be enabled in phase 2 (secure GHL integration). Thank you for your interest.';
-    });
+  const submitBtn = document.getElementById('quote-submit-btn');
+  const messageEl = document.getElementById('form-message');
+  if (!form || !messageEl) return;
+
+  function showMessage(text, isError) {
+    messageEl.textContent = text;
+    messageEl.classList.remove('hidden', 'text-accent-dark', 'text-red-600');
+    messageEl.classList.add(isError ? 'text-red-600' : 'text-accent-dark');
   }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (submitBtn) submitBtn.disabled = true;
+    messageEl.classList.add('hidden');
+
+    const payload = {
+      name: form.querySelector('[name="name"]')?.value?.trim() || '',
+      email: form.querySelector('[name="email"]')?.value?.trim() || '',
+      phone: form.querySelector('[name="phone"]')?.value?.trim() || '',
+      serviceType: form.querySelector('[name="serviceType"]')?.value?.trim() || '',
+      projectDescription: form.querySelector('[name="projectDescription"]')?.value?.trim() || '',
+      neighborhood: form.querySelector('[name="neighborhood"]')?.value?.trim() || '',
+    };
+
+    try {
+      const res = await fetch('/api/submit-quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        showMessage(data.message || 'Thank you! We\'ll be in touch soon.', false);
+        form.reset();
+      } else {
+        showMessage(data.error || 'Something went wrong. Please try again or call us.', true);
+      }
+    } catch {
+      showMessage('Network error. Please try again or call us.', true);
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
 </script>

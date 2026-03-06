@@ -16,29 +16,33 @@ A static, high-performance marketing site for a cold-climate deck builder and ge
 | `npm run build`| Build to `./dist`|
 | `npm run preview` | Preview production build |
 
-## Deploy (Cloudflare)
+## Deploy (Cloudflare Pages)
 
-1. Build: `npm run build`
-2. Deploy: `npx wrangler pages deploy dist` (or connect repo to Cloudflare Pages with build command `npm run build` and output directory `dist`)
+**Git-connected:**
 
-The included `wrangler.toml` points static assets to `./dist`. For 404 handling, Astro static builds do not use SPA fallback by default; add a custom 404 page in `src/pages/404.astro` if desired.
+1. In [Cloudflare Dashboard](https://dash.cloudflare.com) → Workers & Pages → Create → Pages → Connect to Git → choose this repo.
+2. **Build command:** `npm run build`
+3. **Build output / Publish directory / Path:** `dist` — this is the folder Astro outputs and the one Cloudflare should deploy.
+4. **Deploy command** (if the UI requires one): `npx wrangler pages deploy dist` (or add `--project-name=YOUR_PROJECT_NAME` if you get "Must specify a project name"; see `troubleshooting.md`) — use this so the built `dist` folder is deployed to Pages. Do *not* use `npx wrangler deploy` (that’s for Workers).
 
 ## Project structure
 
 - `src/data/site.json` — single source of truth (business info, services, testimonials, neighborhoods). Edit to update site content.
 - `src/layouts/Layout.astro` — header (logo + nav + phone CTA), footer (hours, address, social, trust badges).
 - `src/pages/` — index, services, about, contact.
-- `src/components/` — Hero, TrustBar, ServiceCard, ReviewCard, ProcessSteps, Gallery, QuoteSection, QuoteForm (island).
+- `src/components/` — Hero, TrustBar, ServiceCard, ReviewCard, ProcessSteps, Gallery, QuoteSection, QuoteForm.
+- `functions/api/submit-quote.js` — Cloudflare Pages Function: receives quote form POST, creates a contact in GoHighLevel and adds a note with service/neighborhood/project details.
 
-## Quote form (phase 2)
+## Quote form & GoHighLevel (GHL)
 
-**Next steps:** The quote form on the Contact page is currently stubbed. Phase 2 will add:
+The Contact page form submits to **POST /api/submit-quote**, which creates a contact in GHL and attaches a note with service type, neighborhood, and project description.
 
-- Secure **GoHighLevel (GHL)** form submission (server action or serverless endpoint).
-- **Cloudflare Turnstile** for spam protection (replace test sitekey with production key).
-- API keys and form endpoint configured securely (env / server-only).
+**Required environment variables** (set in Cloudflare Pages → your project → Settings → Environment variables):
 
-Until then, the form shows a placeholder message that submission will be enabled in phase 2.
+- `HIGHLEVEL_TOKEN` — GHL API token (Private Integration or OAuth access token).
+- `HIGHLEVEL_LOCATION_ID` — GHL location/sub-account ID.
+
+Optional next step: add **Cloudflare Turnstile** for spam protection (test sitekey for dev, production key for live).
 
 ## Performance
 
