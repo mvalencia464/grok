@@ -1,55 +1,43 @@
-# Northern Timber & Outdoor Living — Contractor Site
+# Northern Timber & Outdoor Living
 
-A static, high-performance marketing site for a cold-climate deck builder and general contractor. Built with **Astro 5**, **Tailwind CSS**, and optimized for 98+ Lighthouse, fast LCP, and zero unnecessary JavaScript.
-
-## Stack
-
-- **Astro 5** — static output (`output: 'static'`)
-- **Tailwind CSS** — premium 2026 aesthetic (light neutrals, soft grays, muted wood, restrained teal accent)
-- **Cloudflare** — deploy `./dist` via Workers Static Assets / Pages
+Static marketing site for a cold-climate deck builder and general contractor. **Astro 5**, **Tailwind CSS**, **Cloudflare Pages** (static + Functions).
 
 ## Commands
 
-| Command        | Action           |
-|----------------|------------------|
-| `npm run dev`  | Start dev server |
-| `npm run build`| Build to `./dist`|
+| Command | Action |
+|---------|--------|
+| `npm run dev` | Start dev server |
+| `npm run build` | Build to `./dist` |
 | `npm run preview` | Preview production build |
 
 ## Deploy (Cloudflare Pages)
 
-**Git-connected:**
+Connect the repo in [Cloudflare Dashboard](https://dash.cloudflare.com) → Workers & Pages → Pages → Connect to Git.
 
-1. In [Cloudflare Dashboard](https://dash.cloudflare.com) → Workers & Pages → Create → Pages → Connect to Git → choose this repo.
-2. **Build command:** `npm run build`
-3. **Build output / Publish directory / Path:** `dist` — this is the folder Astro outputs and the one Cloudflare should deploy.
-4. **Deploy command** (if the UI requires one): `npx wrangler pages deploy dist` (or add `--project-name=YOUR_PROJECT_NAME` if you get "Must specify a project name"; see `troubleshooting.md`) — use this so the built `dist` folder is deployed to Pages. Do *not* use `npx wrangler deploy` (that’s for Workers).
+- **Build command:** `npm run build`
+- **Build output directory:** `dist`
+
+Cloudflare builds and deploys automatically on push. Ensure `wrangler.toml` has `name` and `pages_build_output_dir = "dist"` so the `functions/` API is used.
+
+## Hero image
+
+`public/hero.png` is loaded **only on desktop** (via `<picture>` + `media="(min-width: 1024px)"`); mobile uses a gradient so LCP stays fast. For best desktop LCP, use an optimized image (e.g. WebP, ~1600px wide) and replace or add `public/hero.webp` and a matching `<source>` in `Hero.astro`.
 
 ## Project structure
 
-- `src/data/site.json` — single source of truth (business info, services, testimonials, neighborhoods). Edit to update site content.
-- `src/layouts/Layout.astro` — header (logo + nav + phone CTA), footer (hours, address, social, trust badges).
+- `src/data/site.json` — Business info, services, testimonials, neighborhoods.
 - `src/pages/` — index, services, about, contact.
-- `src/components/` — Hero, TrustBar, ServiceCard, ReviewCard, ProcessSteps, Gallery, QuoteSection, QuoteForm.
-- `functions/api/submit-quote.js` — Cloudflare Pages Function: receives quote form POST, creates a contact in GoHighLevel and adds a note with service/neighborhood/project details.
+- `src/components/` — QuoteForm (contact form island), QuoteSection, Hero, TrustBar, etc.
+- `functions/api/submit-quote.js` — POST /api/submit-quote; creates a GHL contact with tags.
 
-## Quote form & GoHighLevel (GHL)
+## Quote form & GoHighLevel
 
-The Contact page form submits to **POST /api/submit-quote**, which creates a contact in GHL and attaches a note with service type, neighborhood, and project description.
+Form submits to **POST /api/submit-quote**. The Function creates a contact in GHL: name, email, phone, source "Website Quote Form", and **tags** (service type, neighborhood, `quote`, `website`). Project description can go in a GHL custom field if you set the env var.
 
-**Required environment variables** (set in Cloudflare Pages → your project → Settings → Environment variables):
+**Env vars** (Cloudflare Pages → Settings → Environment variables):
 
-- `HIGHLEVEL_TOKEN` — GHL API token (Private Integration or OAuth access token).
-- `HIGHLEVEL_LOCATION_ID` — GHL location/sub-account ID.
+- `HIGHLEVEL_TOKEN` — required (scopes: **contacts.write**; **locations/customFields.write** only if using project description custom field)
+- `HIGHLEVEL_LOCATION_ID` — required
+- `HIGHLEVEL_CUSTOM_FIELD_PROJECT_DESCRIPTION` — optional (GHL custom field ID for project description)
 
-Optional next step: add **Cloudflare Turnstile** for spam protection (test sitekey for dev, production key for live).
-
-## Performance
-
-- Minimal JS: only the quote form uses an Astro island (`client:idle`).
-- Images: Astro `<Image />` with remote Unsplash placeholders (avif); replace with client photos when ready.
-- No third-party script bloat; fonts loaded with `media="print"` + `onload` for non-blocking.
-
-## Aesthetic
-
-Light neutrals, soft grays, muted wood tones, restrained teal/green accent, generous whitespace, subtle hovers and transitions. High-end outdoor living brand feel — trustworthy and aspirational.
+**Troubleshooting:** Form only works on the deployed site (not local dev). If the form fails, check the latest deployment is Live, env vars are set, and hard-refresh or use incognito. "Server configuration error" = missing env vars. Build error "Return statement is not allowed" = use an `if (condition) { ... }` block in Astro script instead of top-level `return`. Deploy "Must specify a project name" = `wrangler.toml` needs `name = "grok"` and `pages_build_output_dir = "dist"`.

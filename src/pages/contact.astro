@@ -18,13 +18,13 @@ const description = `Contact ${site.businessName} for a free quote. ${site.prima
         <div class="lg:col-span-2 space-y-8">
           <div>
             <h2 class="text-sm font-medium text-neutral-500 uppercase tracking-wider">Phone</h2>
-            <a href={`tel:${site.primaryPhone.replace(/\D/g, '')}`} class="mt-1 block text-lg font-medium text-neutral-800 hover:text-accent transition-colors duration-200">
+            <a href={`tel:${site.primaryPhone.replace(/\D/g, '')}`} class="mt-1 block text-lg font-medium text-neutral-800 hover:text-brand-orange transition-colors duration-200">
               {site.primaryPhone}
             </a>
           </div>
           <div>
             <h2 class="text-sm font-medium text-neutral-500 uppercase tracking-wider">Email</h2>
-            <a href={`mailto:${site.primaryEmail}`} class="mt-1 block text-lg font-medium text-neutral-800 hover:text-accent transition-colors duration-200">
+            <a href={`mailto:${site.primaryEmail}`} class="mt-1 block text-lg font-medium text-neutral-800 hover:text-brand-orange transition-colors duration-200">
               {site.primaryEmail}
             </a>
           </div>
@@ -38,7 +38,9 @@ const description = `Contact ${site.businessName} for a free quote. ${site.prima
           </div>
         </div>
         <div class="lg:col-span-3" id="quote">
-          <QuoteForm />
+          <div class="bg-white border-[3px] border-[#C3420D] p-8 rounded-none max-w-xl">
+            <QuoteForm />
+          </div>
         </div>
       </div>
     </div>

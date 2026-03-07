@@ -1,19 +1,19 @@
 ---
 const site = (await import('../data/site.json')).default;
-const badges = [
-  'Free estimates',
-  'Satisfaction guarantee',
-  'Licensed & insured',
-  'Climate-durable builds',
+const city = site.primaryCity;
+const items = [
+  { icon: '★', label: `#1 Rated in ${city}` },
+  { icon: '🛡️', label: '25 Year Structural Warranty' },
+  { icon: '🔨', label: 'Master Craftsmen Certified' },
 ];
 ---
 
-<section class="bg-surface-muted border-y border-neutral-200 py-6" aria-label="Trust badges">
-  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-    <ul class="flex flex-wrap items-center justify-center gap-8 sm:gap-12 text-sm text-neutral-600">
-      {badges.map((label) => (
+<section class="bg-neutral-50 border-t border-neutral-200 py-6" aria-label="Trust badges">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <ul class="flex flex-wrap justify-between items-center gap-6 text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-500">
+      {items.map(({ icon, label }) => (
         <li class="flex items-center gap-2">
-          <span class="h-1.5 w-1.5 rounded-full bg-accent shrink-0" aria-hidden="true" />
+          <span class="text-brand-orange" aria-hidden="true">{icon}</span>
           {label}
         </li>
       ))}

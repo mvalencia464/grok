@@ -1,0 +1,32 @@
+---
+interface Props {
+  text: string;
+  author: string;
+  rating: number;
+  source: string;
+  avatarUrl?: string;
+}
+
+const { text, author, rating, source, avatarUrl } = Astro.props;
+const initial = (author || '?').charAt(0).toUpperCase();
+---
+
+<div class="flex flex-col rounded-none border border-neutral-200 bg-surface-elevated p-5 shadow-sm break-inside-avoid mb-4">
+  <div class="flex text-amber-500 text-sm mb-2" aria-label={`${rating} out of 5 stars`}>
+    {[1, 2, 3, 4, 5].map((i) => (
+      <span class={i <= rating ? 'text-amber-500' : 'text-neutral-300'}>★</span>
+    ))}
+  </div>
+  <p class="text-neutral-700 text-sm leading-relaxed mb-4 whitespace-pre-line">{text}</p>
+  <footer class="flex items-center gap-3 pt-2 border-t border-neutral-100">
+    {avatarUrl ? (
+      <img src={avatarUrl} alt="" class="h-10 w-10 rounded-full object-cover" width="40" height="40" loading="lazy" />
+    ) : (
+      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-200 text-sm font-semibold text-neutral-600" aria-hidden="true">{initial}</span>
+    )}
+    <div>
+      <p class="font-semibold text-neutral-800 text-sm">{author}</p>
+      <p class="text-xs text-neutral-500">{source}</p>
+    </div>
+  </footer>
+</div>

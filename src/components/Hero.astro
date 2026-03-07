@@ -1,44 +1,62 @@
 ---
-import { Image } from 'astro:assets';
-
+/**
+ * Hero: two-column layout (content left, quote form right). Copy and style
+ * match reference: #1 rated badge, "Turn your backyard into a resort", form card.
+ * Desktop: hero image (picture/source media only). Mobile: gradient only for LCP.
+ */
+import QuoteForm from './QuoteForm.astro';
 const site = (await import('../data/site.json')).default;
-// Placeholder: client will provide hero image; use high-quality durable deck / winter setting
-const heroImageUrl = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80';
+const city = site.primaryCity;
+
+const tinyPlaceholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 ---
 
-<section class="relative min-h-[85vh] flex flex-col justify-end overflow-hidden">
-  <div class="absolute inset-0 bg-neutral-900/40 z-10" aria-hidden="true" />
-  <Image
-    src={heroImageUrl}
-    alt="Durable deck and outdoor living space in a cold-climate setting"
-    width={1600}
-    height={1067}
-    class="absolute inset-0 w-full h-full object-cover"
-    fetchpriority="high"
-    loading="eager"
-    format="avif"
-  />
-  <div class="relative z-20 mx-auto max-w-6xl w-full px-4 sm:px-6 lg:px-8 pb-24 pt-32">
-    <p class="text-accent-muted font-medium text-sm uppercase tracking-widest mb-4">{site.primaryCity} · Outdoor Living</p>
-    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight max-w-2xl">
-      {site.tagline}
-    </h1>
-    <p class="mt-6 text-lg text-neutral-200 max-w-xl">
-      Free estimates. Climate-durable craftsmanship. From custom decks to repairs and exterior renovations.
-    </p>
-    <div class="mt-10 flex flex-wrap gap-4">
-      <a
-        href="/contact#quote"
-        class="inline-flex items-center rounded-lg bg-accent px-6 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-accent-dark focus-ring"
-      >
-        Get Free Quote
-      </a>
-      <a
-        href="/services"
-        class="inline-flex items-center rounded-lg border border-white/60 bg-white/10 px-6 py-3 text-base font-medium text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/20 focus-ring"
-      >
-        View Services
-      </a>
+<section class="relative min-h-[min(85vh,800px)] overflow-hidden" aria-label="Hero">
+  <div class="absolute inset-0 bg-gradient-to-b from-wood-light/90 via-surface-muted to-surface z-0" aria-hidden="true" />
+  <picture class="absolute inset-0 z-0 hidden lg:block" aria-hidden="true">
+    <source type="image/png" media="(min-width: 1024px)" srcset="/newhero.png" />
+    <img
+      src={tinyPlaceholder}
+      alt=""
+      decoding="async"
+      class="w-full h-full object-cover"
+      width="1"
+      height="1"
+    />
+  </picture>
+  <!-- White overlay: left almost fully white per reference -->
+  <div class="absolute inset-0 z-[1] bg-gradient-to-r from-white/90 via-white/50 to-white/25" aria-hidden="true" />
+  <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
+    <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
+      <!-- Left: copy (screenshot standard) -->
+      <div class="w-full lg:w-3/5 flex-shrink-0">
+        <div class="flex items-center gap-4 mb-6">
+          <span class="h-px w-12 bg-brand-orange" aria-hidden="true" />
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">
+            {city.toUpperCase()}'S #1 RATED DECK BUILDER
+          </p>
+        </div>
+        <h1 class="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.9] font-bold text-brand-wood mb-6 uppercase tracking-tighter">
+          Turn Your<br /><span class="text-brand-dark">Backyard<br />Into A Resort.</span>
+        </h1>
+        <p class="text-xl md:text-2xl font-semibold text-brand-wood mb-10 italic">
+          {city}'s #1 Rated Deck Builder
+        </p>
+        <p class="max-w-lg text-neutral-700 text-lg leading-relaxed mb-8">
+          Skip the contractor nightmares. Weekly check-ins, transparent pricing, and frost-proof engineering designed for Alaska's climate. Build your 21-day legacy today.
+        </p>
+        <div class="hidden lg:flex items-center gap-3">
+          <img src="https://www.gstatic.com/images/branding/googlelogo/svg/googlelogo_clr_74x24px.svg" alt="Google" width="74" height="24" class="h-6 w-auto" loading="lazy" />
+          <span class="text-[10px] font-bold uppercase text-neutral-600 tracking-wider">4.9, 122 Google Reviews</span>
+        </div>
+      </div>
+
+      <!-- Right: form card (reference style: white, dark border, shadow) -->
+      <div class="w-full lg:w-2/5 flex-shrink-0 lg:sticky lg:top-28" id="quote">
+        <div class="bg-white border-[3px] border-[#C3420D] p-8 md:p-10 rounded-none">
+          <QuoteForm />
+        </div>
+      </div>
     </div>
   </div>
 </section>

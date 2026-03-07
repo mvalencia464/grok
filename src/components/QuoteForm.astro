@@ -1,68 +1,49 @@
 ---
 /**
- * Quote form — submits to Cloudflare Pages Function /api/submit-quote, which creates a GHL contact.
+ * Quote form — submits to /api/submit-quote (GHL). High-level service options only.
  */
 import siteData from '../data/site.json';
 
-// Build flat list of selected service names from all categories for dropdown
-const serviceOptions = siteData.categories.flatMap((cat: { services: { name: string; selected: boolean }[] }) =>
-  cat.services.filter((s: { selected: boolean }) => s.selected).map((s: { name: string }) => s.name)
-);
+const serviceOptions = [
+  'Custom Deck Design',
+  'New Deck Construction',
+  'Deck Replacement',
+  'Multi-level Decks',
+  'Composite Decking',
+  'Deck Repair & Railing',
+];
 const neighborhoods = siteData.neighborhoods as string[];
+const inputClass = 'w-full border-2 border-neutral-200 bg-white p-3 text-sm font-medium text-brand-dark focus:border-brand-orange focus:ring-0 outline-none rounded-none';
 ---
 
 <form
   id="quote-form"
-  class="space-y-6 rounded-2xl border border-neutral-200 bg-surface-elevated p-8"
+  class="space-y-4 rounded-none"
   aria-label="Request a quote"
 >
-  <h2 class="text-xl font-semibold text-neutral-800">Request a Quote</h2>
-  <p class="text-sm text-neutral-600">
-    Fill out the form below and we'll get back to you with a free estimate.
-  </p>
+  <h2 class="font-display text-3xl font-bold uppercase mb-1 text-center text-brand-dark">Request Estimate</h2>
+  <p class="text-center text-[10px] font-bold tracking-widest text-neutral-500 mb-8 border-b border-neutral-200 pb-4">THE NO-SURPRISE GUARANTEE</p>
 
-  <div class="grid gap-6 sm:grid-cols-2">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <label class="block">
-      <span class="block text-sm font-medium text-neutral-700">Name</span>
-      <input
-        type="text"
-        name="name"
-        required
-        autocomplete="name"
-        class="mt-1 block w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-800 shadow-sm focus:border-accent focus:ring-1 focus:ring-accent"
-      />
+      <span class="sr-only">Full Name</span>
+      <input type="text" name="name" required autocomplete="name" class={inputClass} placeholder="Full Name*" />
     </label>
     <label class="block">
-      <span class="block text-sm font-medium text-neutral-700">Phone</span>
-      <input
-        type="tel"
-        name="phone"
-        required
-        autocomplete="tel"
-        class="mt-1 block w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-800 shadow-sm focus:border-accent focus:ring-1 focus:ring-accent"
-      />
+      <span class="sr-only">Phone Number</span>
+      <input type="tel" name="phone" required autocomplete="tel" class={inputClass} placeholder="Phone Number*" />
     </label>
   </div>
 
   <label class="block">
-    <span class="block text-sm font-medium text-neutral-700">Email</span>
-    <input
-      type="email"
-      name="email"
-      required
-      autocomplete="email"
-      class="mt-1 block w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-800 shadow-sm focus:border-accent focus:ring-1 focus:ring-accent"
-    />
+    <span class="sr-only">Email</span>
+    <input type="email" name="email" required autocomplete="email" class={inputClass} placeholder="Email Address*" />
   </label>
 
   <label class="block">
-    <span class="block text-sm font-medium text-neutral-700">Service type</span>
-    <select
-      name="serviceType"
-      required
-      class="mt-1 block w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-800 shadow-sm focus:border-accent focus:ring-1 focus:ring-accent"
-    >
-      <option value="">Select a service</option>
+    <span class="sr-only">Service type</span>
+    <select name="serviceType" required class={inputClass}>
+      <option value="">Select a service *</option>
       {serviceOptions.map((name) => (
         <option value={name}>{name}</option>
       ))}
@@ -70,22 +51,14 @@ const neighborhoods = siteData.neighborhoods as string[];
   </label>
 
   <label class="block">
-    <span class="block text-sm font-medium text-neutral-700">Project description</span>
-    <textarea
-      name="projectDescription"
-      rows={4}
-      required
-      class="mt-1 block w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-800 shadow-sm focus:border-accent focus:ring-1 focus:ring-accent"
-    />
+    <span class="sr-only">Project description</span>
+    <textarea name="projectDescription" rows={4} required class={inputClass} placeholder="Project description *"></textarea>
   </label>
 
   <label class="block">
-    <span class="block text-sm font-medium text-neutral-700">Address / neighborhood (optional)</span>
-    <select
-      name="neighborhood"
-      class="mt-1 block w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-800 shadow-sm focus:border-accent focus:ring-1 focus:ring-accent"
-    >
-      <option value="">Select if applicable</option>
+    <span class="sr-only">Address / neighborhood</span>
+    <select name="neighborhood" class={inputClass}>
+      <option value="">Address / neighborhood (optional)</option>
       {neighborhoods.map((n) => (
         <option value={n}>{n}</option>
       ))}
@@ -95,14 +68,21 @@ const neighborhoods = siteData.neighborhoods as string[];
   <button
     type="submit"
     id="quote-submit-btn"
-    class="w-full rounded-lg bg-accent px-4 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-accent-dark focus-ring disabled:opacity-70 disabled:cursor-not-allowed"
+    class="w-full bg-brand-orange hover:bg-orange-800 text-white font-bold py-3 px-3 sm:py-4 sm:px-4 text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors mt-6 shadow-md rounded-none focus-ring disabled:opacity-70 disabled:cursor-not-allowed"
   >
-    Submit request
+    <span class="sm:hidden">Get Quote →</span>
+    <span class="hidden sm:inline">Check Availability & Get Quote →</span>
   </button>
 
-  <p class="text-xs text-neutral-500">
+  <p class="text-xs text-neutral-500 mt-4">
     By submitting you agree to be contacted about your project. We do not share your information.
   </p>
+
+  <div class="mt-8 flex items-center justify-center gap-2">
+    <span class="flex items-center gap-0.5 text-brand-orange text-sm" aria-hidden="true">★ ★ ★ ★ ★</span>
+    <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">4.9, 122 Google Reviews</span>
+  </div>
+
   <p id="form-message" class="hidden text-sm mt-2" role="status" aria-live="polite"></p>
 </form>
 
@@ -114,42 +94,42 @@ const neighborhoods = siteData.neighborhoods as string[];
   if (form && messageEl) {
     function showMessage(text, isError) {
       messageEl.textContent = text;
-      messageEl.classList.remove('hidden', 'text-accent-dark', 'text-red-600');
-      messageEl.classList.add(isError ? 'text-red-600' : 'text-accent-dark');
+      messageEl.classList.remove('hidden', 'text-brand-orange', 'text-red-600');
+      messageEl.classList.add(isError ? 'text-red-600' : 'text-brand-orange');
     }
 
     form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (submitBtn) submitBtn.disabled = true;
-    messageEl.classList.add('hidden');
+      e.preventDefault();
+      if (submitBtn) submitBtn.disabled = true;
+      messageEl.classList.add('hidden');
 
-    const payload = {
-      name: form.querySelector('[name="name"]')?.value?.trim() || '',
-      email: form.querySelector('[name="email"]')?.value?.trim() || '',
-      phone: form.querySelector('[name="phone"]')?.value?.trim() || '',
-      serviceType: form.querySelector('[name="serviceType"]')?.value?.trim() || '',
-      projectDescription: form.querySelector('[name="projectDescription"]')?.value?.trim() || '',
-      neighborhood: form.querySelector('[name="neighborhood"]')?.value?.trim() || '',
-    };
+      const payload = {
+        name: form.querySelector('[name="name"]')?.value?.trim() || '',
+        email: form.querySelector('[name="email"]')?.value?.trim() || '',
+        phone: form.querySelector('[name="phone"]')?.value?.trim() || '',
+        serviceType: form.querySelector('[name="serviceType"]')?.value?.trim() || '',
+        projectDescription: form.querySelector('[name="projectDescription"]')?.value?.trim() || '',
+        neighborhood: form.querySelector('[name="neighborhood"]')?.value?.trim() || '',
+      };
 
-    try {
-      const res = await fetch('/api/submit-quote', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.success) {
-        showMessage(data.message || 'Thank you! We\'ll be in touch soon.', false);
-        form.reset();
-      } else {
-        showMessage(data.error || 'Something went wrong. Please try again or call us.', true);
+      try {
+        const res = await fetch('/api/submit-quote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.success) {
+          showMessage(data.message || 'Thank you! We\'ll be in touch soon.', false);
+          form.reset();
+        } else {
+          showMessage(data.error || 'Something went wrong. Please try again or call us.', true);
+        }
+      } catch {
+        showMessage('Network error. Please try again or call us.', true);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
       }
-    } catch {
-      showMessage('Network error. Please try again or call us.', true);
-    } finally {
-      if (submitBtn) submitBtn.disabled = false;
-    }
-  });
+    });
   }
 </script>

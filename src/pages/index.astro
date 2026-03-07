@@ -5,10 +5,25 @@ import TrustBar from '../components/TrustBar.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import Gallery from '../components/Gallery.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
-import ReviewCard from '../components/ReviewCard.astro';
-import QuoteSection from '../components/QuoteSection.astro';
+import GoogleReviewCard from '../components/GoogleReviewCard.astro';
 
 const site = (await import('../data/site.json')).default;
+const reviewsData = (await import('../data/reviews.json')).default;
+const rawReviews = reviewsData.rawReviews ?? [];
+const withText = rawReviews.filter((r: { text?: string }) => (r.text || '').trim().length > 0);
+const textReviews = withText.filter((r: { videoUrl?: string; videoThumbnailUrl?: string }) => !r.videoUrl && !r.videoThumbnailUrl);
+const videoReview = rawReviews.find((r: { videoUrl?: string; videoThumbnailUrl?: string }) => r.videoUrl || r.videoThumbnailUrl);
+const averageRating = rawReviews.length ? (rawReviews.reduce((a: number, r: { rating: number }) => a + r.rating, 0) / rawReviews.length).toFixed(1) : '0';
+const googleCount = rawReviews.filter((r: { source?: string }) => r.source === 'Google').length;
+
+// Show all text reviews; move Mary Berger (4-star) to ~80% down for trust-building
+const maryBerger = textReviews.find((r: { author: string; rating: number }) => r.author === 'Mary Berger' && r.rating === 4);
+const rest = textReviews.filter((r: { author: string; rating: number }) => !(r.author === 'Mary Berger' && r.rating === 4));
+const insertAt = Math.floor(rest.length * 0.8);
+const displayReviews = maryBerger
+  ? [...rest.slice(0, insertAt), maryBerger, ...rest.slice(insertAt)]
+  : rest;
+
 const primaryCategory = site.categories.find((c: { isPrimary: boolean }) => c.isPrimary);
 const featuredServices = primaryCategory
   ? primaryCategory.services
@@ -45,19 +60,42 @@ const description = `${site.tagline} ${site.businessName} — decks, outdoor liv
   </section>
   <Gallery />
   <ProcessSteps />
-  <section class="py-20 lg:py-28 bg-surface-muted" aria-label="Testimonials">
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-semibold text-neutral-800 text-center">What Our Clients Say</h2>
-      <p class="mt-3 text-neutral-600 text-center max-w-xl mx-auto">
-        Real feedback from homeowners we've worked with.
-      </p>
-      <ul class="mt-12 grid gap-8 md:grid-cols-3" role="list">
-        {site.testimonials.map((t: { id: string; quote: string; author: string; location: string }) => (
-          <li>
-            <ReviewCard quote={t.quote} author={t.author} location={t.location} id={t.id} />
-          </li>
+  <section id="reviews" class="py-16 lg:py-24 bg-surface-muted border-t border-neutral-200" aria-label="Reviews">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange mb-2">Reviews</p>
+          <h2 class="font-display text-4xl md:text-5xl font-bold text-neutral-800 uppercase tracking-tight">What Anchorage Is Saying.</h2>
+        </div>
+        <div class="flex flex-wrap items-center gap-4 text-sm">
+          <div class="flex items-center gap-2">
+            <span class="text-amber-500 text-lg" aria-hidden="true">★★★★★</span>
+            <span class="font-bold text-neutral-800">{averageRating}</span>
+            <span class="text-neutral-500 uppercase font-semibold">Average</span>
+          </div>
+          <span class="text-neutral-300">|</span>
+          <span class="text-neutral-600 font-semibold">{googleCount} Google Reviews</span>
+          <a href="https://www.google.com/search?q=deckmasters+anchorage+reviews" target="_blank" rel="noopener" class="text-brand-orange font-bold hover:underline uppercase text-xs tracking-wider">See All Google Reviews →</a>
+        </div>
+      </div>
+      <div class="columns-1 md:columns-4 column-gap-4">
+        {videoReview && (
+          <div class="rounded-none border border-neutral-200 bg-neutral-200 overflow-hidden shadow-sm break-inside-avoid mb-4 aspect-[9/16] w-full">
+            <video
+              class="w-full h-full object-cover"
+              poster={videoReview.videoThumbnailUrl || ''}
+              controls
+              preload="metadata"
+              playsinline
+            >
+              <source src={videoReview.videoUrl || ''} type="video/mp4" />
+            </video>
+          </div>
+        )}
+        {displayReviews.map((r: { text: string; author: string; rating: number; source: string; avatarUrl?: string }) => (
+          <GoogleReviewCard text={r.text} author={r.author} rating={r.rating} source={r.source || 'Google'} avatarUrl={r.avatarUrl} />
         ))}
-      </ul>
+      </div>
     </div>
   </section>
   <section class="py-20 lg:py-28 bg-surface">
@@ -73,5 +111,4 @@ const description = `${site.tagline} ${site.businessName} — decks, outdoor liv
       </p>
     </div>
   </section>
-  <QuoteSection />
 </Layout>

@@ -23,48 +23,54 @@ const metaDescription = description ?? `${site.tagline} Custom decks, repairs & 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap"
       media="print"
       onload="this.media='all'"
     />
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap"
       />
     </noscript>
     <title>{fullTitle}</title>
   </head>
   <body>
-    <header class="sticky top-0 z-50 bg-surface-elevated/95 backdrop-blur-sm border-b border-neutral-200">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="relative flex h-18 items-center justify-between gap-4">
-          <a href="/" class="flex items-center gap-2 transition-opacity duration-200 hover:opacity-80 focus-ring rounded">
-            <span class="text-xl font-semibold tracking-tight text-neutral-800">{site.businessName}</span>
-          </a>
-          <nav class="hidden md:flex items-center gap-8" aria-label="Main">
-            <a href="/" class="text-neutral-600 hover:text-accent transition-colors duration-200 text-sm font-medium">Home</a>
-            <a href="/services" class="text-neutral-600 hover:text-accent transition-colors duration-200 text-sm font-medium">Services</a>
-            <a href="/about" class="text-neutral-600 hover:text-accent transition-colors duration-200 text-sm font-medium">About</a>
-            <a href="/contact" class="text-neutral-600 hover:text-accent transition-colors duration-200 text-sm font-medium">Contact</a>
-          </nav>
-          <details class="md:hidden group">
-            <summary class="list-none cursor-pointer text-neutral-600 hover:text-accent text-sm font-medium py-2">Menu</summary>
-            <ul class="absolute top-full left-0 right-0 bg-surface-elevated border-b border-neutral-200 px-4 py-4 flex flex-col gap-2">
-              <li><a href="/" class="block py-2 text-neutral-600 hover:text-accent text-sm font-medium">Home</a></li>
-              <li><a href="/services" class="block py-2 text-neutral-600 hover:text-accent text-sm font-medium">Services</a></li>
-              <li><a href="/about" class="block py-2 text-neutral-600 hover:text-accent text-sm font-medium">About</a></li>
-              <li><a href="/contact" class="block py-2 text-neutral-600 hover:text-accent text-sm font-medium">Contact</a></li>
-            </ul>
-          </details>
+    <header class="sticky top-0 z-50 w-full bg-white border-b border-neutral-200/80">
+      <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <a href="/" class="flex items-center transition-opacity duration-200 hover:opacity-90 focus-ring rounded-sm">
+          <span class="font-display text-2xl tracking-tighter font-bold text-brand-wood">{site.businessName.split(' ')[0]} <span class="text-brand-orange">{site.businessName.split(' ').slice(1).join(' ')}</span></span>
+        </a>
+        <div class="hidden md:flex items-center gap-8 font-medium text-xs uppercase tracking-[0.2em] text-neutral-600">
+          <a href="/" class="hover:text-brand-orange transition-colors duration-200">Home</a>
+          <a href="/services" class="hover:text-brand-orange transition-colors duration-200">Services</a>
+          <a href="/#reviews" class="hover:text-brand-orange transition-colors duration-200">Reviews</a>
+          <a href="/about" class="hover:text-brand-orange transition-colors duration-200">About</a>
+          <a href="/contact" class="hover:text-brand-orange transition-colors duration-200">Contact</a>
+        </div>
+        <details class="md:hidden group relative">
+          <summary class="list-none cursor-pointer text-neutral-600 hover:text-brand-orange text-xs uppercase tracking-widest py-2">Menu</summary>
+          <ul class="absolute top-full left-0 right-0 bg-white border-b border-neutral-200 px-4 py-4 flex flex-col gap-2">
+            <li><a href="/" class="block py-2 text-neutral-600 hover:text-brand-orange text-xs uppercase tracking-widest">Home</a></li>
+            <li><a href="/services" class="block py-2 text-neutral-600 hover:text-brand-orange text-xs uppercase tracking-widest">Services</a></li>
+            <li><a href="/#reviews" class="block py-2 text-neutral-600 hover:text-brand-orange text-xs uppercase tracking-widest">Reviews</a></li>
+            <li><a href="/about" class="block py-2 text-neutral-600 hover:text-brand-orange text-xs uppercase tracking-widest">About</a></li>
+            <li><a href="/contact" class="block py-2 text-neutral-600 hover:text-brand-orange text-xs uppercase tracking-widest">Contact</a></li>
+          </ul>
+        </details>
+        <div class="flex items-center gap-4 sm:gap-6">
+          <div class="hidden lg:flex flex-col items-end">
+            <span class="text-[10px] uppercase text-neutral-400 font-bold">Call us</span>
+            <a href={`tel:${site.primaryPhone.replace(/\D/g, '')}`} class="text-sm font-bold text-brand-dark hover:text-brand-orange transition-colors">{site.primaryPhone}</a>
+          </div>
           <a
-            href={`tel:${site.primaryPhone.replace(/\D/g, '')}`}
-            class="shrink-0 rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-dark focus-ring"
+            href="/#quote"
+            class="shrink-0 bg-brand-orange hover:bg-orange-800 text-white px-5 py-3 font-bold text-sm uppercase tracking-wider transition-all shadow-md focus-ring rounded-none"
           >
-            {site.primaryPhone}
+            Get Quote →
           </a>
         </div>
-      </div>
+      </nav>
     </header>
     <main>
       <slot />
