@@ -50,39 +50,62 @@ const logoRest = logoParts.slice(1).join('');
     </head>
   <body>
     <header class="sticky top-0 z-50 w-full bg-white border-b border-neutral-200/80">
-      <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-2 sm:gap-2.5 transition-opacity duration-200 hover:opacity-90 focus-ring rounded-sm overflow-visible">
-          <img src={typeof iconSvg === 'string' ? iconSvg : iconSvg.src} alt="" width="36" height="32" class="h-8 w-auto shrink-0" fetchpriority="high" />
-          <span class="font-display text-3xl font-bold text-brand-wood uppercase tracking-tight pr-px overflow-visible">{logoFirst}<span class="brand-text-gradient">{logoRest}</span></span>
-        </a>
-        <div class="hidden md:flex items-center gap-8 font-medium text-xs uppercase tracking-[0.2em] text-neutral-600">
-          <a href="/" class="hover:text-brand-orange transition-colors duration-200">Home</a>
-          <a href="/services" class="hover:text-brand-orange transition-colors duration-200">Services</a>
-          <a href="/#reviews" class="hover:text-brand-orange transition-colors duration-200">Reviews</a>
-          <a href="/about" class="hover:text-brand-orange transition-colors duration-200">About</a>
-          <a href="/contact" class="hover:text-brand-orange transition-colors duration-200">Contact</a>
-        </div>
-        <details class="md:hidden group relative">
-          <summary class="list-none cursor-pointer text-neutral-600 hover:text-brand-orange text-xs uppercase tracking-widest py-3 px-2 -mx-2 min-h-[44px] flex items-center">Menu</summary>
-          <ul class="absolute top-full left-0 right-0 bg-white border-b border-neutral-200 px-4 py-3 flex flex-col gap-0 shadow-lg">
-            <li><a href="/" class="block py-3 text-neutral-600 hover:text-brand-orange text-xs uppercase tracking-widest border-b border-neutral-100">Home</a></li>
-            <li><a href="/services" class="block py-3 text-neutral-600 hover:text-brand-orange text-xs uppercase tracking-widest border-b border-neutral-100">Services</a></li>
-            <li><a href="/#reviews" class="block py-3 text-neutral-600 hover:text-brand-orange text-xs uppercase tracking-widest border-b border-neutral-100">Reviews</a></li>
-            <li><a href="/about" class="block py-3 text-neutral-600 hover:text-brand-orange text-xs uppercase tracking-widest border-b border-neutral-100">About</a></li>
-            <li><a href="/contact" class="block py-3 text-neutral-600 hover:text-brand-orange text-xs uppercase tracking-widest">Contact</a></li>
-          </ul>
-        </details>
-        <div class="flex items-center gap-4 sm:gap-6">
-          <div class="hidden lg:flex flex-col items-end">
-            <span class="text-[10px] uppercase text-neutral-400 font-bold">Call us</span>
-            <a href={`tel:${site.primaryPhone.replace(/\D/g, '')}`} class="text-sm font-bold text-brand-dark hover:text-brand-orange transition-colors">{site.primaryPhone}</a>
+      <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative" aria-label="Main">
+        <input type="checkbox" id="menu-toggle" class="peer sr-only" aria-hidden="true" />
+        <!-- Full-screen menu canvas (mobile) -->
+        <div class="fixed inset-0 z-40 bg-white transform translate-x-full transition-transform duration-300 ease-out peer-checked:translate-x-0 md:translate-x-0 md:static md:hidden md:pointer-events-none" aria-hidden="true">
+          <div class="flex flex-col min-h-full pt-24 pb-8 px-6">
+            <label for="menu-toggle" class="absolute top-6 right-4 p-2 -m-2 cursor-pointer text-neutral-600 hover:text-brand-orange rounded-sm focus-ring" aria-label="Close menu">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </label>
+            <ul class="flex flex-col gap-0 text-center" role="list">
+              <li><a href="/" class="block py-4 text-lg font-medium text-neutral-800 hover:text-brand-orange border-b border-neutral-100">Home</a></li>
+              <li><a href="/services" class="block py-4 text-lg font-medium text-neutral-800 hover:text-brand-orange border-b border-neutral-100">Services</a></li>
+              <li><a href="/#reviews" class="block py-4 text-lg font-medium text-neutral-800 hover:text-brand-orange border-b border-neutral-100">Reviews</a></li>
+              <li><a href="/about" class="block py-4 text-lg font-medium text-neutral-800 hover:text-brand-orange border-b border-neutral-100">About</a></li>
+              <li><a href="/contact" class="block py-4 text-lg font-medium text-neutral-800 hover:text-brand-orange border-b border-neutral-100">Contact</a></li>
+            </ul>
+            <a href="/#quote" class="mt-8 mx-auto w-full max-w-xs bg-brand-orange hover:bg-orange-800 text-white px-6 py-4 font-bold text-sm uppercase tracking-wider text-center transition-colors focus-ring rounded-none">
+              Get Quote →
+            </a>
           </div>
-          <a
-            href="/#quote"
-            class="shrink-0 bg-brand-orange hover:bg-orange-800 text-white px-5 py-3 font-bold text-sm uppercase tracking-wider transition-all shadow-md focus-ring rounded-none"
-          >
-            Get Quote →
+        </div>
+        <!-- Top bar -->
+        <div class="flex items-center justify-between h-20">
+          <!-- Mobile: hamburger (left) | logo (center) | phone (right) -->
+          <div class="md:hidden grid grid-cols-[auto_1fr_auto] items-center w-full gap-2">
+            <label for="menu-toggle" class="flex justify-start p-2 -m-2 cursor-pointer text-neutral-600 hover:text-brand-orange rounded-sm focus-ring items-center min-h-[44px] min-w-[44px]" aria-label="Open menu">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            </label>
+            <a href="/" class="flex items-center justify-center gap-1.5 transition-opacity duration-200 hover:opacity-90 focus-ring rounded-sm shrink-0 min-w-0 justify-self-center">
+              <img src={typeof iconSvg === 'string' ? iconSvg : iconSvg.src} alt="DeckMasters" width="36" height="32" class="h-8 w-auto shrink-0" fetchpriority="high" />
+              <span class="font-display text-2xl font-bold text-brand-wood uppercase tracking-tight pr-px overflow-visible">{logoFirst}<span class="brand-text-gradient">{logoRest}</span></span>
+            </a>
+            <a href={`tel:${site.primaryPhone.replace(/\D/g, '')}`} class="flex items-center justify-center min-h-[44px] min-w-[44px] rounded-full bg-brand-orange text-white hover:bg-orange-800 shadow-md focus-ring transition-colors justify-self-end" aria-label={`Call ${site.primaryPhone}`}>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+            </a>
+          </div>
+          <!-- Desktop: logo (left) -->
+          <a href="/" class="hidden md:flex items-center gap-2 sm:gap-2.5 transition-opacity duration-200 hover:opacity-90 focus-ring rounded-sm overflow-visible shrink-0 min-w-0">
+            <img src={typeof iconSvg === 'string' ? iconSvg : iconSvg.src} alt="DeckMasters" width="36" height="32" class="h-8 w-auto shrink-0" fetchpriority="high" />
+            <span class="font-display text-3xl font-bold text-brand-wood uppercase tracking-tight pr-px overflow-visible">{logoFirst}<span class="brand-text-gradient">{logoRest}</span></span>
           </a>
+          <div class="hidden md:flex items-center gap-8 font-medium text-xs uppercase tracking-[0.2em] text-neutral-600">
+            <a href="/" class="hover:text-brand-orange transition-colors duration-200">Home</a>
+            <a href="/services" class="hover:text-brand-orange transition-colors duration-200">Services</a>
+            <a href="/#reviews" class="hover:text-brand-orange transition-colors duration-200">Reviews</a>
+            <a href="/about" class="hover:text-brand-orange transition-colors duration-200">About</a>
+            <a href="/contact" class="hover:text-brand-orange transition-colors duration-200">Contact</a>
+          </div>
+          <div class="hidden md:flex items-center gap-4 sm:gap-6">
+            <div class="hidden lg:flex flex-col items-end">
+              <span class="text-[10px] uppercase text-neutral-400 font-bold">Call us</span>
+              <a href={`tel:${site.primaryPhone.replace(/\D/g, '')}`} class="text-sm font-bold text-brand-dark hover:text-brand-orange transition-colors">{site.primaryPhone}</a>
+            </div>
+            <a href="/#quote" class="hidden md:inline-flex shrink-0 bg-brand-orange hover:bg-orange-800 text-white px-5 py-3 font-bold text-sm uppercase tracking-wider transition-all shadow-md focus-ring rounded-none">
+              Get Quote →
+            </a>
+          </div>
         </div>
       </nav>
     </header>
@@ -90,14 +113,11 @@ const logoRest = logoParts.slice(1).join('');
       <slot />
     </main>
     <a
-      href={`tel:${site.primaryPhone.replace(/\D/g, '')}`}
+      href="/#quote"
       class="fixed left-0 right-0 z-40 md:hidden flex items-center justify-center gap-2 bg-brand-orange text-white font-bold text-sm py-3 rounded-none shadow-lg hover:bg-orange-800 active:scale-[0.98] transition-all focus-ring min-h-[52px] bottom-0 [padding-bottom:max(0.75rem,env(safe-area-inset-bottom))] [padding-left:max(1rem,env(safe-area-inset-left))] [padding-right:max(1rem,env(safe-area-inset-right))]"
-      aria-label={`Call ${site.primaryPhone}`}
+      aria-label="Get quote"
     >
-      <svg class="w-5 h-5 shrink-0 text-white" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-      </svg>
-      <span>{site.primaryPhone}</span>
+      Get Quote →
     </a>
     <footer class="bg-neutral-100 border-t border-neutral-200">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16">
