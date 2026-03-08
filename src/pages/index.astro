@@ -9,6 +9,7 @@ import FeaturedProject from '../components/FeaturedProject.astro';
 import ReviewsExperimental from '../components/ReviewsExperimental.astro';
 
 const site = (await import('../data/site.json')).default;
+const { serviceImages } = await import('../data/serviceImages.ts');
 const reviewsData = (await import('../data/reviews.json')).default;
 const rawReviews = reviewsData.rawReviews ?? [];
 const videoReview = rawReviews.find((r: { videoUrl?: string; videoThumbnailUrl?: string }) => r.videoUrl || r.videoThumbnailUrl) ?? null;
@@ -40,7 +41,7 @@ const description = `${site.tagline} ${site.businessName} — decks, outdoor liv
       <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list">
         {featuredServices.map((name) => (
           <li>
-            <ServiceCard title={name} href="/services" />
+            <ServiceCard title={name} href="/services" imageUrl={serviceImages[name]} />
           </li>
         ))}
       </ul>

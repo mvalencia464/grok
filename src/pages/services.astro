@@ -4,6 +4,7 @@ import ServiceCard from '../components/ServiceCard.astro';
 import Gallery from '../components/Gallery.astro';
 
 const site = (await import('../data/site.json')).default;
+const { serviceImages } = await import('../data/serviceImages.ts');
 const title = `Services | Decks, Repairs & Outdoor Living in ${site.primaryCity}`;
 const description = `Custom deck design, deck replacement, composite decking, railing, siding, structural repairs. Serving ${site.primaryCity}. Free estimates.`;
 ---
@@ -24,7 +25,7 @@ const description = `Custom deck design, deck replacement, composite decking, ra
             <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" role="list">
               {selected.map((s: { name: string }) => (
                 <li>
-                  <ServiceCard title={s.name} href="/contact#quote" />
+                  <ServiceCard title={s.name} href="/contact#quote" imageUrl={serviceImages[s.name]} />
                 </li>
               ))}
             </ul>
