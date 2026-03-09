@@ -1,4 +1,4 @@
-# Northern Timber & Outdoor Living
+# Deck Masters AK
 
 Static marketing site for a cold-climate deck builder and general contractor. **Astro 5**, **Tailwind CSS**, **Cloudflare Pages** (static + Functions).
 
