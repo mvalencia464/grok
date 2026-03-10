@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const site = (await import('../data/site.json')).default;
+const title = `Careers | Join Our Team — ${site.businessName}`;
+const description = `Join ${site.businessName}. We're hiring skilled deck builders and outdoor living professionals in ${site.primaryCity}.`;
+---
+
+<Layout title={title} description={description}>
+  <section class="py-20 lg:py-28 bg-surface">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <h1 class="text-4xl font-semibold text-neutral-800">Careers</h1>
+      <p class="mt-4 text-lg text-neutral-600">
+        We're always looking for talented, dependable people who take pride in building durable outdoor spaces.
+      </p>
+      <div class="mt-10 prose prose-neutral max-w-none text-neutral-600">
+        <p>
+          {site.businessName} builds custom decks, railings, and outdoor structures across the {site.primaryCity} area.
+          If you have experience in deck building, carpentry, or general contracting and want to work with a team that
+          values quality and clear communication, we'd like to hear from you.
+        </p>
+        <h2 class="text-xl font-semibold text-neutral-800 mt-10">How to apply</h2>
+        <p>
+          Send us your name, phone number, and a brief note about your experience. We'll get back to you to discuss
+          current openings and next steps.
+        </p>
+      </div>
+      <div class="mt-12 p-6 bg-neutral-100 border border-neutral-200 rounded-none">
+        <h2 class="text-lg font-semibold text-neutral-800">Contact us about jobs</h2>
+        <p class="mt-2 text-neutral-600">
+          Call <a href={`tel:${site.primaryPhone.replace(/\D/g, '')}`} class="font-medium text-brand-orange hover:underline">{site.primaryPhone}</a>
+          or use our <a href="/contact#quote" class="font-medium text-brand-orange hover:underline">contact form</a> and mention you're interested in joining the team.
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>

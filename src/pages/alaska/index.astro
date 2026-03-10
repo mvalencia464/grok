@@ -1,0 +1,77 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+
+const site = (await import('../../data/site.json')).default;
+const { serviceImages } = await import('../../data/serviceImages.ts');
+const primaryCategory = site.categories.find((c: { isPrimary: boolean }) => c.isPrimary);
+const deckServices = primaryCategory
+  ? primaryCategory.services.filter((s: { selected: boolean }) => s.selected).slice(0, 9)
+  : [];
+const neighborhoods = (site.neighborhoods as string[]) || [];
+const title = `Anchorage Deck Builder | Custom Decks in Alaska — ${site.businessName}`;
+const description = `Premier deck builder in Anchorage, Alaska. Custom decks, railings, and outdoor structures built for Alaska's climate. Free estimates.`;
+---
+
+<Layout title={title} description={description}>
+  <section class="py-20 lg:py-28 bg-surface">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange mb-2">Deck Builder</p>
+      <h1 class="text-4xl md:text-5xl font-semibold text-neutral-800">Anchorage Deck Builder</h1>
+      <p class="mt-6 text-lg text-neutral-600 max-w-3xl">
+        {site.businessName} is Anchorage's premier deck builder. We design and build custom decks, railings, and outdoor
+        structures built to withstand Alaska's extreme cold, heavy snowfall, and freeze-thaw cycles.
+      </p>
+      <p class="mt-4 text-neutral-600 max-w-3xl">
+        From consult and design through precision build, we deliver durable outdoor spaces for lifetime enjoyment.
+      </p>
+      <a
+        href="/contact#quote"
+        class="mt-8 inline-flex rounded-none bg-brand-orange hover:bg-orange-800 px-6 py-3 text-base font-medium text-white transition-colors duration-200 focus-ring"
+      >
+        Get a free quote
+      </a>
+    </div>
+  </section>
+  {deckServices.length > 0 && (
+    <section class="py-16 lg:py-24 bg-surface-muted border-t border-neutral-200">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-semibold text-neutral-800">Deck services we offer</h2>
+        <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" role="list">
+          {deckServices.map((s: { name: string }) => (
+            <li>
+              <ServiceCard title={s.name} href="/contact#quote" imageUrl={serviceImages[s.name]} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+  {neighborhoods.length > 0 && (
+    <section class="py-16 lg:py-24 bg-surface border-t border-neutral-200">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-semibold text-neutral-800">Serving the Anchorage area</h2>
+        <p class="mt-3 text-neutral-600">We serve homeowners across greater Anchorage, including:</p>
+        <ul class="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-3" role="list">
+          {neighborhoods.map((n) => (
+            <li class="flex items-center gap-2 text-neutral-600">
+              <span class="h-1.5 w-1.5 rounded-full bg-brand-orange shrink-0" aria-hidden="true" />
+              {n}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+  <section class="py-20 bg-surface-muted border-t border-neutral-200">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
+      <p class="text-neutral-600">Ready for your new deck?</p>
+      <a
+        href="/contact#quote"
+        class="mt-4 inline-flex rounded-none bg-brand-orange px-6 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-orange-800 focus-ring"
+      >
+        Get a free quote
+      </a>
+    </div>
+  </section>
+</Layout>

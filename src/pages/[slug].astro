@@ -1,0 +1,163 @@
+---
+/**
+ * Root-level blog post URLs to preserve old WordPress slugs for SEO.
+ * Only blog collection entries are generated here; static pages (about, contact, etc.) are unchanged.
+ */
+import Layout from '../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const site = (await import('../data/site.json')).default;
+const title = `${post.data.title} | Blog — ${site.businessName}`;
+const description = post.data.description;
+
+function getPostImageUrl(slug: string | undefined): string | undefined {
+  if (!slug) return undefined;
+  return `/projects/${slug}.avif`;
+}
+
+const imageUrl = getPostImageUrl(post.data.image);
+const videoId = post.data.video;
+---
+
+<Layout title={title} description={description}>
+  <article class="bg-surface">
+    {/* Featured image (only when no video) */}
+    {!videoId && imageUrl && (
+      <div class="w-full aspect-[21/9] sm:aspect-[2/1] max-h-[320px] overflow-hidden bg-neutral-200">
+        <img
+          src={imageUrl}
+          alt=""
+          width={1200}
+          height={400}
+          class="w-full h-full object-cover"
+          fetchpriority="high"
+        />
+      </div>
+    )}
+
+    {/* Header */}
+    <header class="border-b border-neutral-200 bg-surface">
+      <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-14">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange mb-3">Blog</p>
+        <h1 class="font-display text-3xl sm:text-4xl font-bold text-neutral-800 uppercase tracking-tight leading-tight">
+          {post.data.title}
+        </h1>
+        <p class="mt-4 text-sm font-medium text-neutral-500">
+          {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </p>
+        <p class="mt-6 text-lg text-neutral-600 leading-relaxed max-w-2xl">
+          {post.data.description}
+        </p>
+      </div>
+    </header>
+
+    {/* YouTube embed: thumbnail + single play button until click (avoids double play button with native embed) */}
+    {videoId && (
+      <div class="border-b border-neutral-200 bg-neutral-100">
+        <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+          <div
+            class="youtube-embed-wrapper relative w-full aspect-video overflow-hidden rounded-none bg-neutral-800 cursor-pointer focus-within:ring-2 focus-within:ring-brand-orange focus-within:ring-offset-2"
+            data-video-id={videoId}
+            tabindex="0"
+            role="button"
+            aria-label="Play YouTube video"
+          >
+            <img
+              src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
+              alt=""
+              width="480"
+              height="360"
+              class="absolute inset-0 w-full h-full object-cover youtube-embed-poster"
+            />
+            <span class="youtube-embed-play absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
+              <span class="rounded-full bg-black/65 p-4 flex items-center justify-center">
+                <svg class="w-12 h-12 sm:w-14 sm:h-14 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <script is:inline>
+        (function () {
+          document.querySelectorAll('.youtube-embed-wrapper').forEach(function (wrapper) {
+            if (wrapper.dataset.loaded) return;
+            var id = wrapper.getAttribute('data-video-id');
+            if (!id) return;
+            function load() {
+              wrapper.dataset.loaded = 'true';
+              var iframe = document.createElement('iframe');
+              iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+              iframe.title = 'YouTube video';
+              iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+              iframe.allowFullscreen = true;
+              iframe.className = 'absolute inset-0 w-full h-full';
+              wrapper.querySelector('.youtube-embed-poster')?.remove();
+              wrapper.querySelector('.youtube-embed-play')?.remove();
+              wrapper.appendChild(iframe);
+            }
+            wrapper.addEventListener('click', load);
+            wrapper.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); load(); } });
+          });
+        })();
+      </script>
+    )}
+
+    {/* Body: scannable sections, clear hierarchy */}
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-14">
+      <div
+        class="blog-post max-w-none text-neutral-700 leading-relaxed
+          [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-neutral-800 [&_h2]:mt-12 [&_h2]:mb-4
+          [&_h2]:border-l-4 [&_h2]:border-brand-orange [&_h2]:pl-4 [&_h2:first-of-type]:mt-8
+          [&_p]:text-neutral-700 [&_p]:leading-relaxed [&_p]:mt-4 [&_p:first-of-type]:mt-0
+          [&_ul]:mt-4 [&_ul]:space-y-3 [&_ul]:list-none [&_ul]:pl-0
+          [&_li]:relative [&_li]:pl-5 [&_li]:text-neutral-700 [&_li]:leading-relaxed
+          [&_li]:before:content-[''] [&_li]:before:absolute [&_li]:before:left-0 [&_li]:before:top-[0.4em] [&_li]:before:w-1.5 [&_li]:before:h-1.5 [&_li]:before:rounded-full [&_li]:before:bg-brand-orange
+          [&_ul_ul]:mt-2 [&_ul_ul]:space-y-1
+          [&_a]:text-brand-orange [&_a]:font-medium [&_a]:hover:underline [&_a]:transition-colors
+          [&_strong]:font-semibold [&_strong]:text-neutral-800"
+      >
+        <Content />
+      </div>
+
+      {/* Footer */}
+      <footer class="mt-14 pt-10 border-t border-neutral-200 flex flex-wrap items-center gap-4 sm:gap-6">
+        <a href="/blog" class="text-brand-orange font-bold text-sm uppercase tracking-wider hover:underline focus-ring">
+          ← Back to blog
+        </a>
+        <span class="text-neutral-300" aria-hidden="true">|</span>
+        <a
+          href="/contact#quote"
+          class="inline-flex rounded-none bg-brand-orange px-5 py-2.5 text-sm font-bold text-white uppercase tracking-wider transition-colors hover:bg-orange-800 focus-ring"
+        >
+          Get a quote
+        </a>
+      </footer>
+    </div>
+
+    {/* Bottom CTA strip */}
+    <section class="bg-surface-muted border-t border-neutral-200 py-12">
+      <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
+        <p class="text-neutral-600">Ready to start your project?</p>
+        <a
+          href="/contact#quote"
+          class="mt-4 inline-flex rounded-none bg-brand-orange px-6 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-orange-800 focus-ring"
+        >
+          Get a free quote
+        </a>
+      </div>
+    </section>
+  </article>
+</Layout>

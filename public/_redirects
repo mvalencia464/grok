@@ -1,0 +1,26 @@
+# Deck Masters AK — 301 redirects for migration from WordPress (deckmastersak.com)
+# Place this file in public/ so it is copied to dist/ for Cloudflare Pages.
+
+/privacy-policy    /privacy    301
+/privacy-policy/   /privacy    301
+
+/category/deck     /blog       301
+/category/deck/    /blog       301
+
+/tag/deck              /blog    301
+/tag/deck/             /blog    301
+/tag/small-simple      /blog    301
+/tag/small-simple/     /blog    301
+/tag/best-decking-materials   /blog    301
+/tag/best-decking-materials/  /blog    301
+/tag/deck-patio-combo         /blog    301
+/tag/deck-patio-combo/        /blog    301
+/tag/pressure-treated-wood    /blog    301
+/tag/pressure-treated-wood/   /blog    301
+
+# Trailing slash → no trailing slash (posts served at root; same URL as old site)
+/deck-benefits/               /deck-benefits    301
+/best-decking-materials/      /best-decking-materials    301
+/10-cool-backyard-deck-design-ideas/   /10-cool-backyard-deck-design-ideas    301
+/is-trex-decking-right-for-you/        /is-trex-decking-right-for-you    301
+/deck-masters-introduction/            /deck-masters-introduction    301

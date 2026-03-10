@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const site = (await import('../data/site.json')).default;
+const title = `Dock Building Services | Alaska — ${site.businessName}`;
+const description = `Professional dock building and waterfront structures in Alaska. ${site.businessName} builds durable docks for lakes and coastal properties. Free estimates.`;
+---
+
+<Layout title={title} description={description}>
+  <section class="py-20 lg:py-28 bg-surface">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange mb-2">Services</p>
+      <h1 class="text-4xl md:text-5xl font-semibold text-neutral-800">Dock Building Services</h1>
+      <p class="mt-6 text-lg text-neutral-600">
+        From lakefront to coastal properties, we build durable docks and waterfront structures designed for Alaska's
+        conditions. Whether you need a private residential dock, a boat dock, or a custom waterfront solution, we work
+        with you from design through build.
+      </p>
+      <p class="mt-4 text-neutral-600">
+        Our experience with decks, framing, and cold-climate construction translates into docks that stand up to ice,
+        moisture, and heavy use. We focus on quality materials and solid construction so your dock lasts for years.
+      </p>
+      <a
+        href="/contact#quote"
+        class="mt-8 inline-flex rounded-none bg-brand-orange hover:bg-orange-800 px-6 py-3 text-base font-medium text-white transition-colors duration-200 focus-ring"
+      >
+        Get a free quote
+      </a>
+    </div>
+  </section>
+  <section class="py-20 bg-surface-muted border-t border-neutral-200">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
+      <p class="text-neutral-600">Interested in dock building or other outdoor structures?</p>
+      <a
+        href="/contact#quote"
+        class="mt-4 inline-flex rounded-none bg-brand-orange px-6 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-orange-800 focus-ring"
+      >
+        Get a free quote
+      </a>
+    </div>
+  </section>
+</Layout>

@@ -31,15 +31,19 @@ const galleryImages = allImages.slice(0, 29);
       </header>
 
       <div class="mt-8 sm:mt-10 rounded-none border border-neutral-200 bg-black shadow-sm overflow-hidden">
-        <video
-          class="w-full h-full max-h-[70vh] object-contain bg-black"
-          controls
-          preload="metadata"
-          playsinline
-        >
-          <source src="https://pub-df4dfd78a63249579ed1d9564137c9d5.r2.dev/keller.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <div class="aspect-video w-full max-h-[70vh] min-h-[200px]">
+          <video
+            class="w-full h-full object-contain bg-black"
+            width="1920"
+            height="1080"
+            controls
+            preload="metadata"
+            playsinline
+          >
+            <source src="https://pub-df4dfd78a63249579ed1d9564137c9d5.r2.dev/keller.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
       </div>
 
       <div class="mt-10 grid gap-8 md:grid-cols-[minmax(0,1.7fr),minmax(0,1.1fr)] md:items-start">
