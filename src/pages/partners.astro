@@ -1,0 +1,87 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PartnerForm from '../components/PartnerForm.astro';
+
+const site = (await import('../data/site.json')).default;
+const title = `Installation Partners | We Sell, You Build — ${site.businessName}`;
+const description = `Become an Installation Partner with ${site.businessName}. We handle the sales, design, and permits so your crew can focus on production.`;
+---
+
+<Layout title={title} description={description}>
+  <section class="py-20 lg:py-28 bg-surface">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange mb-2">
+          Installation Partners
+        </p>
+        <h1 class="text-4xl font-semibold text-neutral-800">
+          We sell the decks. <br class="hidden sm:block" />You keep your crew building.
+        </h1>
+        <p class="mt-4 text-lg text-neutral-600">
+          If you run a reliable crew and love production work more than sales calls, {site.businessName} can keep your
+          saws spinning with steady, well-organized projects.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-10 md:grid-cols-2 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] items-start">
+        <div class="space-y-6 text-neutral-700 text-base leading-relaxed">
+          <h2 class="text-xl font-semibold text-neutral-800">
+            What you get as an Installation Partner
+          </h2>
+          <ul class="space-y-3 text-neutral-700">
+            <li class="flex gap-3">
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-orange flex-shrink-0"></span>
+              <div>
+                <p class="font-semibold text-neutral-800">Booked work, not tire-kickers.</p>
+                <p class="text-sm text-neutral-600">
+                  We handle the marketing, sales, permits, and material logistics. You and your crew focus on building.
+                </p>
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-orange flex-shrink-0"></span>
+              <div>
+                <p class="font-semibold text-neutral-800">Alaskan-season production volume.</p>
+                <p class="text-sm text-neutral-600">
+                  Systems built for short, intense seasons—clear scopes, organized job starts, and minimal downtime.
+                </p>
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-orange flex-shrink-0"></span>
+              <div>
+                <p class="font-semibold text-neutral-800">Professional project management.</p>
+                <p class="text-sm text-neutral-600">
+                  Our PM team deals with homeowners, inspections, and changes so you don’t have to be on the phone all
+                  day.
+                </p>
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-orange flex-shrink-0"></span>
+              <div>
+                <p class="font-semibold text-neutral-800">Clear expectations & payouts.</p>
+                <p class="text-sm text-neutral-600">
+                  Defined scopes, agreed-upon rates, and predictable payment timelines for every job.
+                </p>
+              </div>
+            </li>
+          </ul>
+
+          <h2 class="text-xl font-semibold text-neutral-800 mt-8">
+            Who this is a great fit for
+          </h2>
+          <p class="text-sm text-neutral-600">
+            You run a small to mid-size crew, care about quality, communicate well on-site, and want to spend more of
+            the season building instead of chasing your next job.
+          </p>
+        </div>
+
+        <div class="bg-neutral-900 border-[3px] border-neutral-700 p-6 sm:p-8 rounded-none shadow-xl shadow-black/40">
+          <PartnerForm />
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+

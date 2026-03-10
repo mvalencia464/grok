@@ -1,0 +1,239 @@
+---
+/**
+ * Partner application form — reuses /api/submit-quote (GHL)
+ * and tags submissions as "Installation Partner Application".
+ */
+const inputClass =
+  'w-full border-2 border-neutral-700 bg-neutral-900/80 p-3 text-sm font-medium text-neutral-100 placeholder-neutral-500 focus:border-brand-orange focus:ring-0 outline-none rounded-none';
+---
+
+<form
+  id="partner-form"
+  class="space-y-4 rounded-none text-neutral-100"
+  aria-label="Apply as an installation partner"
+>
+  <h2 class="font-display text-2xl sm:text-3xl font-bold uppercase mb-1 text-center text-neutral-50">
+    Installation Partner Application
+  </h2>
+  <p class="text-center text-[10px] font-bold tracking-widest text-neutral-400 mb-8 border-b border-neutral-700 pb-4">
+    WE SELL. YOU BUILD. WE BOTH WIN.
+  </p>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <label class="block">
+      <span class="sr-only">Full Name</span>
+      <input
+        type="text"
+        name="name"
+        required
+        autocomplete="name"
+        class={inputClass}
+        placeholder="Your Name*"
+      />
+    </label>
+    <label class="block">
+      <span class="sr-only">Company or Crew Name</span>
+      <input
+        type="text"
+        name="company"
+        required
+        class={inputClass}
+        placeholder="Company / Crew Name*"
+      />
+    </label>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <label class="block">
+      <span class="sr-only">Phone Number</span>
+      <input
+        type="tel"
+        name="phone"
+        required
+        autocomplete="tel"
+        class={inputClass}
+        placeholder="Mobile Number*"
+      />
+    </label>
+    <label class="block">
+      <span class="sr-only">Email</span>
+      <input
+        type="email"
+        name="email"
+        required
+        autocomplete="email"
+        class={inputClass}
+        placeholder="Email Address*"
+      />
+    </label>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <label class="block">
+      <span class="sr-only">Years building decks</span>
+      <input
+        type="number"
+        name="experienceYears"
+        min="0"
+        class={inputClass}
+        placeholder="Years Building Decks"
+      />
+    </label>
+    <label class="block">
+      <span class="sr-only">Crew size</span>
+      <input
+        type="text"
+        name="crewSize"
+        class={inputClass}
+        placeholder="Crew Size (e.g. 3–4 builders)"
+      />
+    </label>
+  </div>
+
+  <label class="block">
+    <span class="sr-only">Primary service area</span>
+    <input
+      type="text"
+      name="serviceArea"
+      class={inputClass}
+      placeholder="Primary Service Area (Anchorage, Mat-Su, Kenai, etc.)"
+    />
+  </label>
+
+  <label class="block">
+    <span class="sr-only">Typical annual volume</span>
+    <input
+      type="text"
+      name="annualVolume"
+      class={inputClass}
+      placeholder="Typical Annual Deck Volume (optional)"
+    />
+  </label>
+
+  <label class="block">
+    <span class="sr-only">Tell us about your work</span>
+    <textarea
+      name="notes"
+      rows={4}
+      class={inputClass}
+      placeholder="Tell us about your work, ideal projects, and when you're available to talk.*"
+      required
+    ></textarea>
+  </label>
+
+  <div class="mt-4 space-y-3 text-[11px] leading-snug text-neutral-300">
+    <label class="flex items-start gap-2">
+      <input
+        type="checkbox"
+        name="termsConsent"
+        required
+        class="mt-0.5 h-3.5 w-3.5 rounded-none border border-neutral-600 bg-neutral-900 text-brand-orange focus:ring-1 focus:ring-brand-orange"
+      />
+      <span>
+        By checking this box I agree to Deck Masters&apos;
+        <a href="/terms" class="underline hover:text-brand-orange">Terms</a>
+        &amp;
+        <a href="/privacy" class="underline hover:text-brand-orange">Privacy Policy</a>
+        and consent to receive SMS messages about partner opportunities and projects. Msg &amp; data rates may apply. Reply
+        STOP to opt out. *
+      </span>
+    </label>
+
+    <label class="flex items-start gap-2">
+      <input
+        type="checkbox"
+        name="marketingConsent"
+        class="mt-0.5 h-3.5 w-3.5 rounded-none border border-neutral-600 bg-neutral-900 text-brand-orange focus:ring-1 focus:ring-brand-orange"
+      />
+      <span>
+        I consent to receive occasional texts about high-value projects and seasonal production needs. Consent is not
+        required to partner. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to cancel.
+      </span>
+    </label>
+  </div>
+
+  <button
+    type="submit"
+    id="partner-submit-btn"
+    class="w-full bg-brand-orange hover:bg-orange-800 text-white font-bold py-3 px-3 sm:py-4 sm:px-4 text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors mt-6 shadow-md rounded-none focus-ring disabled:opacity-70 disabled:cursor-not-allowed"
+  >
+    <span class="sm:hidden">Apply to Partner →</span>
+    <span class="hidden sm:inline">Apply as an Installation Partner →</span>
+  </button>
+
+  <p id="partner-form-message" class="hidden text-sm mt-2" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  const form = document.getElementById('partner-form') as HTMLFormElement | null;
+  const submitBtn = document.getElementById('partner-submit-btn') as HTMLButtonElement | null;
+  const messageEl = document.getElementById('partner-form-message') as HTMLParagraphElement | null;
+
+  if (form && messageEl) {
+    const formEl = form as HTMLFormElement;
+
+    function showMessage(text: string, isError: boolean) {
+      if (!messageEl) return;
+      messageEl.textContent = text;
+      messageEl.classList.remove('hidden', 'text-brand-orange', 'text-red-600');
+      messageEl.classList.add(isError ? 'text-red-600' : 'text-brand-orange');
+    }
+
+    formEl.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!messageEl) return;
+      if (submitBtn) submitBtn.disabled = true;
+      messageEl.classList.add('hidden');
+
+      const getValue = (selector: string) => {
+        const field = formEl.querySelector(selector) as
+          | HTMLInputElement
+          | HTMLTextAreaElement
+          | HTMLSelectElement
+          | null;
+        return field?.value?.trim() || '';
+      };
+
+      const payload = {
+        name: getValue('[name="name"]'),
+        email: getValue('[name="email"]'),
+        phone: getValue('[name="phone"]'),
+        serviceType: 'Installation Partner Application',
+        // Use neighborhood tag to capture service area for segmentation
+        neighborhood: getValue('[name="serviceArea"]'),
+        projectDescription: [
+          `Company: ${getValue('[name="company"]') || 'N/A'}`,
+          `Crew size: ${getValue('[name="crewSize"]') || 'N/A'}`,
+          `Years building: ${getValue('[name="experienceYears"]') || 'N/A'}`,
+          `Primary service area: ${getValue('[name="serviceArea"]') || 'N/A'}`,
+          `Typical annual deck volume: ${getValue('[name="annualVolume"]') || 'N/A'}`,
+          `Notes: ${getValue('[name="notes"]') || 'N/A'}`,
+        ].join(' | '),
+      };
+
+      try {
+        const res = await fetch('/api/submit-quote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.success) {
+          showMessage(
+            data.message ||
+              "Thanks for reaching out. We'll review your info and follow up about partner opportunities.",
+            false
+          );
+          formEl.reset();
+        } else {
+          showMessage(data.error || 'Something went wrong. Please try again or call us.', true);
+        }
+      } catch {
+        showMessage('Network error. Please try again or call us.', true);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+  }
+</script>
+
