@@ -66,7 +66,7 @@ export async function onRequestPost(context) {
   if (serviceType) tags.push(serviceType);
   if (neighborhood) tags.push(neighborhood);
 
-  const contactPayload = {
+  const basePayload = {
     locationId,
     firstName,
     lastName,
@@ -76,9 +76,14 @@ export async function onRequestPost(context) {
     tags,
   };
 
+  // Add project description to notes so it always lands in GHL
+  if (projectDescription.trim()) {
+    basePayload.notes = projectDescription.trim();
+  }
+
   const projectDescriptionFieldId = env.HIGHLEVEL_CUSTOM_FIELD_PROJECT_DESCRIPTION;
   if (projectDescriptionFieldId && projectDescription.trim()) {
-    contactPayload.customFields = [
+    basePayload.customFields = [
       { id: projectDescriptionFieldId, value: projectDescription.trim() },
     ];
   }
@@ -89,20 +94,34 @@ export async function onRequestPost(context) {
     'Version': '2021-07-28',
   };
 
-  try {
+  const postToGHL = async (payload) => {
     const res = await fetch(`${GHL_BASE}/contacts/`, {
       method: 'POST',
       headers,
-      body: JSON.stringify(contactPayload),
+      body: JSON.stringify(payload),
     });
-
     const data = await res.json().catch(() => ({}));
+    return { res, data };
+  };
+
+  try {
+    let { res, data } = await postToGHL(basePayload);
+
+    // If GHL rejected (likely bad customField ID), retry without customFields
+    if (!res.ok && basePayload.customFields) {
+      const fallbackPayload = { ...basePayload };
+      delete fallbackPayload.customFields;
+      const retry = await postToGHL(fallbackPayload);
+      res = retry.res;
+      data = retry.data;
+    }
 
     if (!res.ok) {
       return new Response(
         JSON.stringify({
           success: false,
           error: data.message || data.error || `GHL API error (${res.status})`,
+          debug: { status: res.status, body: data },
         }),
         { status: 502, headers: { 'Content-Type': 'application/json' } }
       );
@@ -114,7 +133,7 @@ export async function onRequestPost(context) {
     );
   } catch (err) {
     return new Response(
-      JSON.stringify({ success: false, error: 'Submission failed. Please try again or call us.' }),
+      JSON.stringify({ success: false, error: 'Submission failed. Please try again or call us.', debug: String(err) }),
       { status: 502, headers: { 'Content-Type': 'application/json' } }
     );
   }
