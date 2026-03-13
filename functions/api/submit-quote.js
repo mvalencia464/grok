@@ -109,7 +109,7 @@ export async function onRequestPost(context) {
     }
 
     return new Response(
-      JSON.stringify({ success: true, message: 'Thank you! We’ll be in touch soon.' }),
+      JSON.stringify({ success: true, message: "Thank you! We'll be in touch soon." }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (err) {
