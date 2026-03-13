@@ -5,10 +5,11 @@ export default {
     extend: {
       colors: {
         // Premium 2026: light neutrals, soft grays, muted wood, restrained teal
+        white: '#F9F6F0',
         surface: {
-          DEFAULT: '#FAFAF9',
-          muted: '#F5F5F4',
-          elevated: '#FFFFFF',
+          DEFAULT: '#F9F6F0',
+          muted: '#EFEBE4',
+          elevated: '#FCFBF8',
         },
         neutral: {
           50: '#FAFAF9',

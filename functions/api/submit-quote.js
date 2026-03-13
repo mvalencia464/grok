@@ -17,22 +17,39 @@ export async function onRequestPost(context) {
     );
   }
 
-  let body;
+  let formData;
   try {
-    body = await request.json();
+    formData = await request.formData();
   } catch {
     return new Response(
-      JSON.stringify({ success: false, error: 'Invalid JSON' }),
+      JSON.stringify({ success: false, error: 'Invalid form data' }),
       { status: 400, headers: { 'Content-Type': 'application/json' } }
     );
   }
 
-  const name = String(body.name || '').trim();
-  const email = String(body.email || '').trim();
-  const phone = String(body.phone || '').trim();
-  const serviceType = String(body.serviceType || '').trim();
-  const projectDescription = String(body.projectDescription || '').trim();
-  const neighborhood = String(body.neighborhood || '').trim();
+  const name = String(formData.get('name') || '').trim();
+  const email = String(formData.get('email') || '').trim();
+  const phone = String(formData.get('phone') || '').trim();
+  const serviceType = String(formData.get('serviceType') || '').trim();
+  let projectDescription = String(formData.get('projectDescription') || '').trim();
+  const neighborhood = String(formData.get('neighborhood') || '').trim();
+  const photo = formData.get('photo');
+
+  if (photo && photo.name && photo.size > 0) {
+    if (env.IMG_BUCKET) {
+      const ext = photo.name.split('.').pop() || 'jpg';
+      const filename = `quote-uploads/${crypto.randomUUID()}.${ext}`;
+      try {
+        await env.IMG_BUCKET.put(filename, photo.stream(), {
+          httpMetadata: { contentType: photo.type || 'application/octet-stream' },
+        });
+        const fileUrl = `https://pub-199d68b182e5418180128341149a9402.r2.dev/${filename}`;
+        projectDescription += `\n\nUploaded Photo: ${fileUrl}`;
+      } catch (err) {
+        console.error('Failed to upload photo to R2:', err);
+      }
+    }
+  }
 
   if (!name || !email || !phone) {
     return new Response(

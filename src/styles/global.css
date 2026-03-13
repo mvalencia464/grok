@@ -35,7 +35,7 @@
 
 /* Reviews section: lightweight diagonal line background (CSS only) */
 .reviews-diagonal-bg {
-  background-color: #f5f5f4; /* surface-muted */
+  background-color: #EFEBE4; /* surface-muted */
   background-image: repeating-linear-gradient(
     -45deg,
     transparent 0,

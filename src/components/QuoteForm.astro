@@ -54,8 +54,15 @@ const inputClass =
 
   <label class="block">
     <span class="sr-only">Project description</span>
-    <textarea name="projectDescription" rows={4} required class={inputClass} placeholder="Project description *"></textarea>
+    <textarea name="projectDescription" rows={1} required class={inputClass} placeholder="Project description *"></textarea>
   </label>
+
+  <div class="block">
+    <div id="dropzone" class="border-2 border-dashed border-neutral-600 p-4 text-center cursor-pointer hover:border-brand-orange hover:bg-neutral-800 transition-colors">
+      <p class="text-xs text-neutral-400" id="dropzone-text">Click or drag a photo of your project area (optional)</p>
+      <input type="file" id="photo-upload" name="photo" accept="image/*" class="hidden" />
+    </div>
+  </div>
 
   <div class="mt-4 space-y-3 text-[11px] leading-snug text-neutral-300">
     <label class="flex items-start gap-2">
@@ -116,9 +123,41 @@ const inputClass =
   const submitBtn = document.getElementById('quote-submit-btn') as HTMLButtonElement | null;
   const messageEl = document.getElementById('form-message') as HTMLParagraphElement | null;
   const successPanel = document.getElementById('quote-success-panel') as HTMLDivElement | null;
+  const dropzone = document.getElementById('dropzone') as HTMLDivElement | null;
+  const photoUpload = document.getElementById('photo-upload') as HTMLInputElement | null;
+  const dropzoneText = document.getElementById('dropzone-text') as HTMLParagraphElement | null;
 
   if (form && messageEl) {
     const formEl = form as HTMLFormElement;
+
+    if (dropzone && photoUpload && dropzoneText) {
+      dropzone.addEventListener('click', () => photoUpload.click());
+      
+      photoUpload.addEventListener('change', () => {
+        if (photoUpload.files && photoUpload.files.length > 0) {
+          dropzoneText.textContent = `Selected: ${photoUpload.files[0].name}`;
+        }
+      });
+
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('border-brand-orange', 'bg-neutral-800');
+      });
+
+      dropzone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('border-brand-orange', 'bg-neutral-800');
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('border-brand-orange', 'bg-neutral-800');
+        if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+          photoUpload.files = e.dataTransfer.files;
+          dropzoneText.textContent = `Selected: ${e.dataTransfer.files[0].name}`;
+        }
+      });
+    }
 
     function showMessage(text: string, isError: boolean) {
       if (!messageEl) return;
@@ -157,21 +196,24 @@ const inputClass =
         return !!field?.checked;
       };
 
-      const payload = {
-        name: getValue('[name="name"]'),
-        email: getValue('[name="email"]'),
-        phone: getValue('[name="phone"]'),
-        serviceType: getValue('[name="serviceType"]'),
-        projectDescription: getValue('[name="projectDescription"]'),
-        termsConsent: getChecked('[name="termsConsent"]'),
-        marketingConsent: getChecked('[name="marketingConsent"]'),
-      };
+      const payload = new FormData();
+      payload.append('name', getValue('[name="name"]'));
+      payload.append('email', getValue('[name="email"]'));
+      payload.append('phone', getValue('[name="phone"]'));
+      payload.append('serviceType', getValue('[name="serviceType"]'));
+      payload.append('projectDescription', getValue('[name="projectDescription"]'));
+      payload.append('termsConsent', getChecked('[name="termsConsent"]') ? 'true' : '');
+      payload.append('marketingConsent', getChecked('[name="marketingConsent"]') ? 'true' : '');
+      
+      const photoInput = document.getElementById('photo-upload') as HTMLInputElement | null;
+      if (photoInput && photoInput.files && photoInput.files[0]) {
+        payload.append('photo', photoInput.files[0]);
+      }
 
       try {
         const res = await fetch('/api/submit-quote', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          body: payload,
         });
         const data = await res.json().catch(() => ({}));
         if (res.ok && data.success) {
@@ -180,6 +222,9 @@ const inputClass =
             false
           );
           formEl.reset();
+          const dropText = document.getElementById('dropzone-text');
+          if (dropText) dropText.textContent = 'Click or drag a photo of your project area (optional)';
+
         } else {
           showMessage(data.error || 'Something went wrong. Please try again or call us.', true);
         }

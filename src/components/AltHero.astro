@@ -1,0 +1,61 @@
+---
+/**
+ * Hero: social-proof angle (116 five-star reviews, trust, reliability).
+ * Alternate version: vibrant background image, dark overlay, light text.
+ */
+import { Image } from 'astro:assets';
+import QuoteForm from './QuoteForm.astro';
+import SocialProofPill from './SocialProofPill.astro';
+import vibrantImg from '../assets/vibrant.webp';
+const site = (await import('../data/site.json')).default;
+const city = site.primaryCity;
+---
+
+<section class="relative min-h-[min(85vh,800px)] overflow-hidden bg-neutral-900" aria-label="Hero">
+  <div class="absolute inset-0 z-0" aria-hidden="true">
+    <Image
+      src={vibrantImg}
+      alt="Vibrant Deck Project"
+      decoding="async"
+      loading="eager"
+      class="w-full h-full object-cover"
+    />
+  </div>
+  <div class="absolute inset-0 z-[1] bg-neutral-900/60 pointer-events-none" aria-hidden="true" />
+  <div
+    class="absolute inset-0 z-[1] pointer-events-none hidden lg:block"
+    aria-hidden="true"
+    style="background-image: linear-gradient(to right, rgba(0,0,0,0.6) 0%, transparent 50%), linear-gradient(to left, rgba(0,0,0,0.4) 0%, transparent 60%);"
+  />
+  
+  <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
+    <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
+      <!-- Left: copy (screenshot standard) -->
+      <div class="w-full lg:w-3/5 flex-shrink-0">
+        <div class="flex items-center gap-4 mb-6">
+          <span class="h-px w-12 bg-brand-orange" aria-hidden="true" />
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange drop-shadow-md">
+            116 FIVE-STAR REVIEWS
+          </p>
+        </div>
+        <h1 class="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] font-bold text-white mb-6 uppercase tracking-tight drop-shadow-lg">
+          The {city} Deck Builder with 116 Five-Star Reviews.
+        </h1>
+        <p class="max-w-xl text-neutral-200 text-lg md:text-xl leading-relaxed mb-6 drop-shadow">
+          We don't just build decks; we <span class="text-brand-orange font-semibold">build trust</span>. From the first call to the final nail, experience why Anchorage homeowners consistently rank DeckMasters as the city's <span class="text-brand-orange font-semibold">most reliable crew</span>.
+        </p>
+        <p class="max-w-lg text-neutral-300 text-base mb-6 uppercase tracking-wide drop-shadow">
+          No more contractor anxiety—just a crew that <span class="text-brand-orange font-semibold">shows up, communicates, and delivers</span>.
+        </p>
+        <SocialProofPill />
+      </div>
+
+      <!-- Right: form card (reference style: white, dark border, shadow) -->
+      <div class="w-full lg:w-2/5 flex-shrink-0 lg:sticky lg:top-28" id="quote">
+        <div class="bg-neutral-900 border-[3px] border-neutral-700 p-8 md:p-10 rounded-none shadow-xl shadow-black/40">
+          <QuoteForm />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
