@@ -57,7 +57,7 @@ export async function onRequestPost(context) {
       uuid = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
     }
     
-    const filename = `quote-uploads/${uuid}.${ext}`;
+    const filename = `deckmasters/${uuid}.${ext}`;
     
     try {
       // Passing the File object directly to .put() is often more robust than .stream()
