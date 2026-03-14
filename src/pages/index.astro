@@ -1,12 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
+import AltHero from '../components/AltHero.astro';
 import TrustBar from '../components/TrustBar.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import Gallery from '../components/Gallery.astro';
 import FeaturedProject from '../components/FeaturedProject.astro';
 import FeaturedCustomer from '../components/FeaturedCustomer.astro';
 import ReviewsExperimental from '../components/ReviewsExperimental.astro';
+import { Image } from 'astro:assets';
+import ownerImg from '../assets/jordanwebb.png';
 
 const site = (await import('../data/site.json')).default;
 const { serviceImages } = await import('../data/serviceImages.ts');
@@ -29,7 +31,7 @@ const description = `${site.tagline} ${site.businessName} — decks, outdoor liv
 ---
 
 <Layout title={title} description={description}>
-  <Hero />
+  <AltHero />
   <TrustBar />
   <section class="py-12 sm:py-16 lg:py-24 bg-surface border-t border-neutral-200" aria-label="Services">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -62,19 +64,15 @@ const description = `${site.tagline} ${site.businessName} — decks, outdoor liv
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div class="grid gap-10 lg:grid-cols-2 lg:items-center">
         <div class="relative">
-          <picture>
-            <source type="image/avif" srcset="/jordanwebb.avif" />
-            <source type="image/png" srcset="/jordanwebb.png" />
-            <img
-              src="/jordanwebb.png"
-              alt="Jordan Webb, owner of Deck Masters, smiling in a white shirt and hat."
-              width="900"
-              height="675"
-              loading="lazy"
-              decoding="async"
-              class="aspect-[4/3] w-full object-cover border border-neutral-200 bg-neutral-100 shadow-sm"
-            />
-          </picture>
+          <Image
+            src={ownerImg}
+            alt="Jordan Webb, owner of Deck Masters, smiling in a white shirt and hat."
+            width={900}
+            height={675}
+            loading="lazy"
+            decoding="async"
+            class="aspect-[4/3] w-full object-cover border border-neutral-200 bg-neutral-100 shadow-sm"
+          />
         </div>
         <div>
           <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange mb-2">

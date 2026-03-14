@@ -7,4 +7,7 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'auto',
   },
+  image: {
+    formats: ['avif', 'webp'],
+  },
 });
