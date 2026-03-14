@@ -45,6 +45,7 @@ export async function onRequestPost(context) {
   let projectDescription = String(data.projectDescription || '').trim();
   const neighborhood = String(data.neighborhood || '').trim();
 
+  let fileUrl = '';
   // Handle Photo Upload (R2)
   if (photoFile && photoFile.name && photoFile.size > 0 && env.IMG_BUCKET) {
     const ext = photoFile.name.split('.').pop() || 'jpg';
@@ -65,7 +66,7 @@ export async function onRequestPost(context) {
         httpMetadata: { contentType: photoFile.type || 'application/octet-stream' },
       });
       
-      const fileUrl = `https://pub-199d68b182e5418180128341149a9402.r2.dev/${filename}`;
+      fileUrl = `https://media.stokeleads.com/${filename}`;
       projectDescription += `\n\nUploaded Photo: ${fileUrl}`;
       console.log(`R2 Success: ${filename}`);
     } catch (err) {
@@ -101,11 +102,19 @@ export async function onRequestPost(context) {
     tags,
   };
 
+  const customFields = [];
   const projectDescriptionFieldId = env.HIGHLEVEL_CUSTOM_FIELD_PROJECT_DESCRIPTION;
+  const quoteImageFieldId = env.HIGHLEVEL_CUSTOM_FIELD_QUOTE_IMAGE;
+
   if (projectDescriptionFieldId && projectDescription) {
-    basePayload.customFields = [
-      { id: projectDescriptionFieldId, value: projectDescription },
-    ];
+    customFields.push({ id: projectDescriptionFieldId, value: projectDescription });
+  }
+  if (quoteImageFieldId && fileUrl) {
+    customFields.push({ id: quoteImageFieldId, value: fileUrl });
+  }
+
+  if (customFields.length > 0) {
+    basePayload.customFields = customFields;
   }
 
   const headers = {

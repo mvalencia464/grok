@@ -7,6 +7,13 @@ name = "grok"
 compatibility_date = "2026-03-06"
 pages_build_output_dir = "dist"
 
+[vars]
+# Add your HighLevel Custom Field IDs here
+# You can find these in HighLevel > Settings > Custom Fields
+HIGHLEVEL_CUSTOM_FIELD_PROJECT_DESCRIPTION = "cVY04IeJOEfpC42bqury"
+HIGHLEVEL_CUSTOM_FIELD_QUOTE_IMAGE = "4umRt0qz4rRZPDhjVQAD"
+HIGHLEVEL_LOCATION_ID = "tV8qFLdWkBLBfjh64cFV"
+
 [[r2_buckets]]
 binding = "IMG_BUCKET"
 bucket_name = "img"
