@@ -87,3 +87,8 @@ Non-sensitive variables are managed in `wrangler.toml` under `[vars]`. Sensitive
 - "Server configuration error" (500) = Missing environment variables in `wrangler.toml` or missing Secrets in dashboard.
 - Styles not updating = Tailwind 4 uses `@theme` in `global.css`; ensure no legacy `tailwind.config.mjs` is present.
 - Build error "Return statement is not allowed" = Use standard `if/else` blocks in Astro scripts.
+
+---
+
+## Technical Documentation
+For a detailed snapshot of the Astro 6 upgrade, custom field IDs, and maintenance notes, see **[docs/MAINTENANCE.md](file:///Users/mauriciovalencia/Desktop/current/deckmasters/docs/MAINTENANCE.md)**.
