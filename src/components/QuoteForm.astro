@@ -1,17 +1,9 @@
 ---
 /**
- * Quote form — submits to /api/submit-quote (GHL). High-level service options only.
+ * Quote form — submits to /api/submit-quote (GHL). Simplified: no service selection.
  */
 import CustomerSuccessManager from './CustomerSuccessManager.astro';
 
-const serviceOptions = [
-  'Custom Deck Design',
-  'New Deck Construction',
-  'Deck Replacement',
-  'Multi-level Decks',
-  'Composite Decking',
-  'Deck Repair & Railing',
-];
 const inputClass =
   'w-full border-2 border-neutral-700 bg-neutral-900/80 p-3 text-sm font-medium text-neutral-100 placeholder-neutral-500 focus:border-brand-orange focus:ring-0 outline-none rounded-none';
 ---
@@ -40,16 +32,6 @@ const inputClass =
   <label class="block">
     <span class="sr-only">Email</span>
     <input type="email" name="email" required autocomplete="email" class={inputClass} placeholder="Email Address*" />
-  </label>
-
-  <label class="block">
-    <span class="sr-only">Service type</span>
-    <select name="serviceType" required class={inputClass}>
-      <option value="">Select a service *</option>
-      {serviceOptions.map((name) => (
-        <option value={name}>{name}</option>
-      ))}
-    </select>
   </label>
 
   <label class="block">
@@ -200,7 +182,6 @@ const inputClass =
       payload.append('name', getValue('[name="name"]'));
       payload.append('email', getValue('[name="email"]'));
       payload.append('phone', getValue('[name="phone"]'));
-      payload.append('serviceType', getValue('[name="serviceType"]'));
       payload.append('projectDescription', getValue('[name="projectDescription"]'));
       payload.append('termsConsent', getChecked('[name="termsConsent"]') ? 'true' : '');
       payload.append('marketingConsent', getChecked('[name="marketingConsent"]') ? 'true' : '');

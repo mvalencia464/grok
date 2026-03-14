@@ -12,7 +12,8 @@ const city = site.primaryCity;
 ---
 
 <section class="relative min-h-[min(85vh,800px)] overflow-hidden bg-neutral-900" aria-label="Hero">
-  <div class="absolute inset-0 z-0" aria-hidden="true">
+  <!-- Desktop Background -->
+  <div class="absolute inset-0 z-0 hidden lg:block" aria-hidden="true">
     <Image
       src={vibrantImg}
       alt="Vibrant Deck Project"
@@ -24,17 +25,35 @@ const city = site.primaryCity;
       class="w-full h-full object-cover"
     />
   </div>
-  <div class="absolute inset-0 z-[1] bg-neutral-900/60 pointer-events-none" aria-hidden="true" />
+  <!-- Overlays (Desktop) -->
+  <div class="absolute inset-0 z-[1] bg-neutral-900/60 pointer-events-none hidden lg:block" aria-hidden="true" />
   <div
     class="absolute inset-0 z-[1] pointer-events-none hidden lg:block"
     aria-hidden="true"
     style="background-image: linear-gradient(to right, rgba(0,0,0,0.6) 0%, transparent 50%), linear-gradient(to left, rgba(0,0,0,0.4) 0%, transparent 60%);"
   />
   
+  <!-- Mobile Background/Gradient -->
+  <div class="absolute inset-0 z-0 lg:hidden bg-gradient-to-b from-neutral-900 via-neutral-900 to-black" aria-hidden="true" />
+
   <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
     <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
       <!-- Left: copy (screenshot standard) -->
       <div class="w-full lg:w-3/5 flex-shrink-0">
+        <!-- Mobile-only "Aesthetic Placement": Small framed image above headline -->
+        <div class="lg:hidden mb-8 -mx-4 sm:mx-0 overflow-hidden shadow-2xl border-y border-neutral-800 sm:border sm:rounded-none">
+          <Image
+            src={vibrantImg}
+            alt="Vibrant Deck Project"
+            width={800}
+            height={533}
+            decoding="async"
+            loading="eager"
+            fetchpriority="high"
+            class="w-full aspect-video object-cover"
+          />
+        </div>
+
         <div class="flex items-center gap-4 mb-6">
           <span class="h-px w-12 bg-brand-orange" aria-hidden="true" />
           <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-orange drop-shadow-md">
